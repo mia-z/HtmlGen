@@ -60,5 +60,8 @@ public enum MarkupTagName
     Title,
     P,
     U,
-    I
+    I,
+    Script,
+    Br,
+    Hr
 }

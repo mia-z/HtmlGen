@@ -4,5 +4,5 @@ namespace HtmlGen.Core.Interfaces;
 
 public interface IMainLayout : ILayout
 {
-    Task<MarkupNode> RenderLayout(IPage page);
+    Task<MarkupNode> RenderMainLayout(IPage page);
 }

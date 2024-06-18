@@ -9,6 +9,11 @@ public readonly struct MarkupClass
         _class = @class;
     }
 
+    public override string ToString()
+    {
+        return _class;
+    }
+
     public static implicit operator string(MarkupClass @class)
     {
         return @class._class;

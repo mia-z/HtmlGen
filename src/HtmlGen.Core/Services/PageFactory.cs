@@ -20,9 +20,15 @@ internal class PageFactory : IPageFactory
         var scope = _serviceProvider.CreateScope().ServiceProvider;
         
         var page = scope.GetServices<IPage>().FirstOrDefault(x => x.Route == route);
-
+        
         if (page is null)
             return null;
+
+        if (page.LayoutType is not null)
+        {
+            page.Layout = scope.GetRequiredKeyedService<ILayout>(page.LayoutType.Name);
+            page.Layout.ComponentResolver = _componentResolver;
+        }
         
         page.ComponentResolver = _componentResolver;
         return page;

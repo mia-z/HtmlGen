@@ -14,6 +14,7 @@ internal sealed class DefaultMainLayout : MainLayout
                         title("C# Static Html Generator"),
                         meta("charset", "UTF-8"),
                         meta("viewport", "width=device-width, initial-scale=1.0"),
+                        script("").WithAttributes(("src", "https://cdn.tailwindcss.com")),
                         style(
                             StylesheetNode.Create(
                                 "html", 
@@ -31,7 +32,7 @@ internal sealed class DefaultMainLayout : MainLayout
                         )
                     ),
                     body(
-                        RenderContent()
+                        await RenderPageContent()
                     )
                 ).WithAttributes(("lang", "en"))
             );

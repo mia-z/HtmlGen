@@ -5,9 +5,8 @@ namespace HtmlGen.Core.Abstractions;
 
 public abstract class MainLayout : LayoutBase, IMainLayout
 {
-    public async Task<MarkupNode> RenderLayout(IPage page)
+    public async Task<MarkupNode> RenderMainLayout(IPage page)
     {
-        PageContent = page;
         var layout = await RenderLayout();
         var content = await page.RenderAsync();
         if (page.ScopedStylesheet is not null)
@@ -16,7 +15,7 @@ public abstract class MainLayout : LayoutBase, IMainLayout
         return layout;
     }
 
-    protected MarkupNode RenderContent()
+    public override async Task<MarkupNode> RenderPageContent()
     {
         return Marker("MAIN ENTRY")
             .WithAttributes(("render-id", Guid.NewGuid().ToString()));
