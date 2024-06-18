@@ -24,7 +24,7 @@ internal sealed class HtmlGenMiddleware
         var page = _pageFactory.GeneratePage(context.Request.Path);
         if (page is not null)
         {
-            var html = await _mainLayout.RenderLayout(page);
+            var html = await _mainLayout.RenderMainLayout(page);
             await context.Response.WriteAsync(html);
         }
 

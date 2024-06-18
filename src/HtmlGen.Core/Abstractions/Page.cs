@@ -6,15 +6,20 @@ public abstract class Page : PageBase
 {
     protected Page()
     {
-        var attribute = Attribute.GetCustomAttribute(GetType(), typeof(RouteAttribute));
-
-        if (attribute is RouteAttribute attr)
+        var routeAttribute = Attribute.GetCustomAttribute(GetType(), typeof(RouteAttribute));
+        if (routeAttribute is RouteAttribute routeAttr)
         {
-            Route = attr.Route;
+            Route = routeAttr.Route;
         }
         else
         {
             throw new ArgumentNullException(nameof(Route), "Need to set Route attribute on page");
+        }
+
+        var layoutAttribute = Attribute.GetCustomAttribute(GetType(), typeof(LayoutAttribute));
+        if (layoutAttribute is LayoutAttribute layoutAttr)
+        {
+            LayoutType = layoutAttr.Layout;
         }
     }
 }

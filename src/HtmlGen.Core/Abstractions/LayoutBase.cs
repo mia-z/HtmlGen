@@ -3,14 +3,19 @@ using HtmlGen.Core.Structs;
 
 namespace HtmlGen.Core.Abstractions;
 
-public abstract class LayoutBase : MarkupBuilder, ILayout
+public abstract class LayoutBase : PageBuilder, ILayout
 {
-    protected IPage PageContent { get; set; }
+    public IPage Page { get; set; }
     
-    public abstract Task<MarkupNode> RenderLayout();
-
     public async Task<MarkupNode> RenderAsync()
     {
         return await RenderLayout();
+    }
+    
+    public abstract Task<MarkupNode> RenderLayout();
+
+    public virtual async Task<MarkupNode> RenderPageContent()
+    {
+        return await Page.RenderContent();
     }
 }

@@ -13,29 +13,35 @@ public static class WebApplicationBuilderExtensions
 {
     public static WebApplicationBuilder RegisterHtmlGen(this WebApplicationBuilder builder)
     {
+        var assemblyTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(x => x.GetTypes())
+            .ToImmutableList();
+        
         builder.Services.AddSingleton<IPageFactory, PageFactory>();
         builder.Services.AddSingleton<ComponentResolver>();
         
-        var registeredPages = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
+        var registeredPages = assemblyTypes
             .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(Page)))
             .ToImmutableArray();
 
         foreach (var page in registeredPages)
             builder.Services.Add(new ServiceDescriptor(typeof(IPage), page, ServiceLifetime.Scoped));
-        
 
-        var registeredComponents = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
+        var registeredComponents = assemblyTypes
             .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(Component)))
             .ToImmutableArray();
 
         foreach (var component in registeredComponents)
             builder.Services.Add(new ServiceDescriptor(component.UnderlyingSystemType, component.UnderlyingSystemType.Name, component, ServiceLifetime.Scoped));
+
+        var registeredLayouts = assemblyTypes
+            .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(Layout)))
+            .ToImmutableArray();
         
+        foreach(var layout in registeredLayouts)
+            builder.Services.Add(new ServiceDescriptor(typeof(ILayout), layout.UnderlyingSystemType.Name, layout, ServiceLifetime.Scoped));
         
-        var mainLayout = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
+        var mainLayout = assemblyTypes
             .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(MainLayout)))
             .ToImmutableArray();
 

@@ -105,6 +105,28 @@ public abstract class MarkupBuilder
         return MarkupNode.Create(MarkupTagName.P, markupNodes);
     }
     
+    protected MarkupNode main(params MarkupNode[] markupNodes)
+    {
+        return MarkupNode.Create(MarkupTagName.Main, markupNodes);
+    }
+
+    protected MarkupNode script(string scriptContent)
+    {
+        return MarkupNode.Create(MarkupTagName.Script, scriptContent);
+    }
+
+    protected MarkupNode br()
+    {
+        return MarkupNode.Create(MarkupTagName.Br)
+            with { IsSelfClosing = true};
+    }
+    
+    protected MarkupNode hr()
+    {
+        return MarkupNode.Create(MarkupTagName.Hr)
+            with { IsSelfClosing = true};
+    }
+    
     protected MarkupNode Repeating<T>(IEnumerable<T>? collection, Func<T, MarkupNode> iterFunc)
     {
         if (collection is null)
