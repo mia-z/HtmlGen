@@ -1,36 +1,31 @@
 using HtmlGen.Core.Interfaces;
+using HtmlGen.Core.Structs;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace HtmlGen.Core.Services;
 
 internal class PageFactory : IPageFactory
 {
-    private readonly ComponentResolver _componentResolver;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IRouteResolver _routeResolver;
+    private readonly IPageResolver _pageResolver;
+    private readonly IMainLayout _mainLayout;
+    private readonly ILayoutResolver _layoutResolver;
     
-    public PageFactory(ComponentResolver componentResolver, IServiceProvider serviceProvider)
+    public PageFactory(IMainLayout mainLayout, IRouteResolver routeResolver, IPageResolver pageResolver, ILayoutResolver layoutResolver)
     {
-        _componentResolver = componentResolver;
-        _serviceProvider = serviceProvider;
+        _mainLayout = mainLayout;
+        _routeResolver = routeResolver;
+        _pageResolver = pageResolver;
+        _layoutResolver = layoutResolver;
     }
 
-    public IPage? GeneratePage(PathString route)
+    public async Task<MarkupNode> GeneratePage(PathString route)
     {
-        var scope = _serviceProvider.CreateScope().ServiceProvider;
+        var pageKey = _routeResolver.Resolve(route, out var routeParameters);
+        var page = _pageResolver.Resolve(pageKey, routeParameters);
+        if (page.HasLayout)
+            page = _layoutResolver.Resolve(page);
         
-        var page = scope.GetServices<IPage>().FirstOrDefault(x => x.Route == route);
-        
-        if (page is null)
-            return null;
-
-        if (page.LayoutType is not null)
-        {
-            page.Layout = scope.GetRequiredKeyedService<ILayout>(page.LayoutType.Name);
-            page.Layout.ComponentResolver = _componentResolver;
-        }
-        
-        page.ComponentResolver = _componentResolver;
-        return page;
+        return await _mainLayout.RenderMainLayout(page);
     }
 }

@@ -1,32 +1,32 @@
 using System.Collections.Immutable;
-using System.Reflection;
+using HtmlGen.Core.Attributes;
 using HtmlGen.Core.Interfaces;
 using HtmlGen.Core.Structs;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using IComponent = HtmlGen.Core.Interfaces.IComponent;
 
 namespace HtmlGen.Core.Services;
 
-public class ComponentResolver
+public class ComponentResolver : IComponentResolver
 {
-    private readonly IServiceProvider _services;
+    private readonly IServiceScopeFactory _scopeFactory;
     
-    public ComponentResolver(IServiceProvider services)
+    public ComponentResolver(IServiceScopeFactory scopeFactory)
     {
-        _services = services;
+        _scopeFactory = scopeFactory;
     }
 
-    protected IComponent Resolve<TComponent>() where TComponent : notnull
+    public IComponent Resolve<TComponent>() where TComponent : IComponent
     {
-        var scoped = _services.CreateScope().ServiceProvider;
-        return (IComponent) scoped.GetRequiredKeyedService<TComponent>(typeof(TComponent).Name);
+        var services = _scopeFactory.CreateScope().ServiceProvider;
+        return services.GetRequiredKeyedService<IComponent>(typeof(TComponent).Name);
     }
     
-    internal IComponent Resolve<TComponent>(params ComponentParameter[] parameters) where TComponent : notnull
+    public IComponent Resolve<TComponent>(params ComponentParameter[] parameters) where TComponent : IComponent
     {
-        var scoped = _services.CreateScope().ServiceProvider;
-        var component = scoped.GetRequiredKeyedService<TComponent>(typeof(TComponent).Name);
+        var services = _scopeFactory.CreateScope().ServiceProvider;
+        
+        var component = services.GetRequiredKeyedService<IComponent>(typeof(TComponent).Name);
+        
         var propertiesWithAttribute = component.GetType().GetProperties()
             .Where(prop => prop.CustomAttributes.Any(y => y.AttributeType.Name == nameof(ParameterAttribute)))
             .ToImmutableArray();
@@ -40,6 +40,6 @@ public class ComponentResolver
             }
         }
         
-        return (IComponent) component;
+        return component;
     }
 }

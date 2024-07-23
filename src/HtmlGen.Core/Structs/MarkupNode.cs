@@ -27,6 +27,21 @@ public readonly struct MarkupNode
         }
     }
     
+    public MarkupNode? this[MarkupTagName tag, int at]
+    {
+        get
+        {
+            try
+            {
+                return Children.Where(x => x.MarkupTag.Tag == tag).ElementAt(at);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+    }
+    
     public static MarkupNode Create(params MarkupNode[] children)
     {
         return new MarkupNode
@@ -75,6 +90,9 @@ public readonly struct MarkupNode
     public MarkupNode WithClasses(params MarkupClass[] classes) =>
         this with { Classes = classes };
 
+    public MarkupNode WithHyperscript(HyperscriptAttribute hs) =>
+        this with { Attributes = [ ..Attributes, hs ] }; 
+    
     public MarkupNode WithStyles(params MarkupStyle[] styleAttrs) =>
         this with { Styles = [ ..Styles, ..styleAttrs ] };
     

@@ -25,6 +25,8 @@ public readonly struct MarkupTag
 
 public enum MarkupTagName
 {
+    Label,
+    Input,
     Comment,
     Div,
     Span,
@@ -63,5 +65,6 @@ public enum MarkupTagName
     I,
     Script,
     Br,
-    Hr
+    Hr,
+    Button
 }

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http;
+
 namespace HtmlGen.Core.Interfaces;
 
 public interface IRoutable
 {
-    string Route { get; }
+    PathString Route { get; }
 }

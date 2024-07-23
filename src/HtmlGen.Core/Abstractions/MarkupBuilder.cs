@@ -115,6 +115,11 @@ public abstract class MarkupBuilder
         return MarkupNode.Create(MarkupTagName.Script, scriptContent);
     }
 
+    protected MarkupNode button(string buttonContent)
+    {
+        return MarkupNode.Create(MarkupTagName.Button, buttonContent);
+    }
+    
     protected MarkupNode br()
     {
         return MarkupNode.Create(MarkupTagName.Br)
@@ -125,6 +130,26 @@ public abstract class MarkupBuilder
     {
         return MarkupNode.Create(MarkupTagName.Hr)
             with { IsSelfClosing = true};
+    }
+    
+    protected MarkupNode label(params MarkupNode[] markupNodes)
+    {
+        return MarkupNode.Create(MarkupTagName.Label, markupNodes);
+    }
+    
+    protected MarkupNode input(string type = "text", string? id = null, string? name = null)
+    {
+        return MarkupNode.Create(MarkupTagName.Input)
+            with 
+            { 
+                Attributes = 
+                    [ 
+                        ("type", type),
+                        ("id", id ?? Guid.NewGuid().ToString()),
+                        ("name", name ?? "")
+                    ], 
+                IsSelfClosing = true 
+            };
     }
     
     protected MarkupNode Repeating<T>(IEnumerable<T>? collection, Func<T, MarkupNode> iterFunc)
@@ -139,7 +164,7 @@ public abstract class MarkupBuilder
         }
         return Fragment(markupNodes.ToArray());
     }
-
+    
     protected MarkupNode Fragment(params MarkupNode[] markupNodes)
     {
         return MarkupNode.Create(markupNodes) with { IsFragment = true};
