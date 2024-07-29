@@ -32,10 +32,7 @@ public readonly struct StylesheetNode
 
     public override string ToString()
     {
-        return $@"{Selectors} {{
-  {string.Join("\n", Properties)}
-  {string.Join("\n", Children)}
-}}";
+        return $"{Selectors}{{{string.Join(string.Empty, Properties)}{string.Join(string.Empty, Children)}}}";
     }
 
     public static implicit operator string(StylesheetNode node)

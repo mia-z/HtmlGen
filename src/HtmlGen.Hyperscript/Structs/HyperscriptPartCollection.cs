@@ -1,4 +1,4 @@
-namespace HtmlGen.Core.Structs;
+namespace HtmlGen.Hyperscript.Structs;
 
 public struct HyperscriptPartCollection
 {

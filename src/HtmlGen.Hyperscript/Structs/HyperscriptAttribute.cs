@@ -1,6 +1,7 @@
 using HtmlGen.Core.Enums;
+using HtmlGen.Core.Structs;
 
-namespace HtmlGen.Core.Structs;
+namespace HtmlGen.Hyperscript.Structs;
 
 public readonly struct HyperscriptAttribute
 {

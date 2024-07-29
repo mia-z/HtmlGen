@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using HtmlGen.Core.Structs;
 
 namespace HtmlGen.Core.Abstractions;
@@ -22,6 +23,11 @@ public abstract class MarkupBuilder
     protected MarkupNode style(params StylesheetNode[] stylesheetNodes)
     {
         return MarkupNode.Create(stylesheetNodes);
+    }
+    
+    protected MarkupNode style(Stylesheet stylesheet)
+    {
+        return MarkupNode.Create(MarkupTagName.Style, stylesheet);
     }
     
     protected MarkupNode h1(params MarkupNode[] markupNodes)
@@ -114,6 +120,12 @@ public abstract class MarkupBuilder
     {
         return MarkupNode.Create(MarkupTagName.Script, scriptContent);
     }
+    
+    protected MarkupNode script(string scriptContent, string scriptSrc)
+    {
+        return MarkupNode.Create(MarkupTagName.Script, scriptContent)
+            .WithAttributes(("src", scriptSrc));
+    }
 
     protected MarkupNode button(string buttonContent)
     {
@@ -139,17 +151,14 @@ public abstract class MarkupBuilder
     
     protected MarkupNode input(string type = "text", string? id = null, string? name = null)
     {
-        return MarkupNode.Create(MarkupTagName.Input)
-            with 
-            { 
-                Attributes = 
-                    [ 
-                        ("type", type),
-                        ("id", id ?? Guid.NewGuid().ToString()),
-                        ("name", name ?? "")
-                    ], 
-                IsSelfClosing = true 
-            };
+        var attributes = new List<MarkupAttribute>();
+        attributes.Add(("type", type));
+        if (id is not null)
+            attributes.Add(("id", id));
+        if (name is not null)
+            attributes.Add(("name", name));
+        
+        return MarkupNode.Create(MarkupTagName.Input) with { IsVoid = true, Attributes = attributes.ToArray() };
     }
     
     protected MarkupNode Repeating<T>(IEnumerable<T>? collection, Func<T, MarkupNode> iterFunc)

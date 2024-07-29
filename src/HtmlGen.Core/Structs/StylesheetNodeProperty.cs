@@ -2,8 +2,8 @@ namespace HtmlGen.Core.Structs;
 
 public readonly struct StylesheetNodeProperty
 {
-    internal string PropertyKey { get; init; }
-    internal string PropertyValue { get; init; }
+    private string PropertyKey { get; init; }
+    private string PropertyValue { get; init; }
 
     public StylesheetNodeProperty()
     {

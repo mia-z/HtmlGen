@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FF3D7818-5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlGen.Test.UnitTests", "test\HtmlGen.Test.UnitTests\HtmlGen.Test.UnitTests.csproj", "{6E71BA08-16BD-4590-9640-CA15FC638171}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlGen.Hyperscript", "src\HtmlGen.Hyperscript\HtmlGen.Hyperscript.csproj", "{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +36,15 @@ Global
 		{6E71BA08-16BD-4590-9640-CA15FC638171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E71BA08-16BD-4590-9640-CA15FC638171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E71BA08-16BD-4590-9640-CA15FC638171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7C62B805-A984-46EC-8BFD-71735C523627} = {85B84C81-5389-4D69-8B26-0F55717EB28D}
 		{21C4FCCF-3B7C-47CA-8C46-2ADE492A2D21} = {85B84C81-5389-4D69-8B26-0F55717EB28D}
 		{6E71BA08-16BD-4590-9640-CA15FC638171} = {FF3D7818-507E-42D1-868F-508954DFA9B4}
+		{550E0F67-F9A3-4865-9EC1-A2B825B9BAB0} = {85B84C81-5389-4D69-8B26-0F55717EB28D}
 	EndGlobalSection
 EndGlobal

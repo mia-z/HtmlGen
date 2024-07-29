@@ -10,5 +10,6 @@ public interface IPage : IRoutable, IAsyncRenderable
     internal ILayout? Layout { get; set; }
     internal bool HasLayout { get; }
     internal Task<MarkupNode> RenderContent();
-    StylesheetNode? ScopedStylesheet { get; init; }
+    Stylesheet? ScopedStylesheet { get; init; }
+    string Title { get; set; }
 }

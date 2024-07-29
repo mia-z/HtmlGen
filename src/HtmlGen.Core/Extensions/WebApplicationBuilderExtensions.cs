@@ -54,7 +54,7 @@ public static class WebApplicationBuilderExtensions
     private static WebApplicationBuilder RegisterMainLayout(this WebApplicationBuilder builder)
     {
         var mainLayout = assemblyTypes
-            .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(MainLayout)))
+            .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(MainLayout)) && x != typeof(DefaultMainLayout))
             .ToImmutableArray();
 
         if (mainLayout.Length > 1)

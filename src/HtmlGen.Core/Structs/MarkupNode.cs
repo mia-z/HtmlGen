@@ -2,21 +2,21 @@ namespace HtmlGen.Core.Structs;
 
 public readonly struct MarkupNode
 {
-    internal List<MarkupNode> Children { get; private init; } = [];
-    internal MarkupTag MarkupTag { get; init; }
-    internal string StringContent { get; init; }
-    internal MarkupAttribute[] Attributes { get; init; } = [];
-    internal MarkupStyle[] Styles { get; init; } = [];
-    internal MarkupClass[] Classes { get; init; } = [];
-    internal bool IsSelfClosing { get; init; } = false;
-    internal bool IsVoid { get; init; } = false;
-    internal bool IsFragment { get; init; } = false;
-    internal bool IsJustContent { get; init; } = false;
+    public List<MarkupNode> Children { get; private init; } = [];
+    public MarkupTag MarkupTag { get; init; }
+    public string StringContent { get; init; }
+    public MarkupAttribute[] Attributes { get; init; } = [];
+    public MarkupStyle[] Styles { get; init; } = [];
+    public MarkupClass[] Classes { get; init; } = [];
+    public bool IsSelfClosing { get; init; } = false;
+    public bool IsVoid { get; init; } = false;
+    public bool IsFragment { get; init; } = false;
+    public bool IsJustContent { get; init; } = false;
     internal bool IsComment { get; init; } = false;
-    
+
     public MarkupNode()
     {
-        
+
     }
 
     public MarkupNode this[MarkupTagName tag]
@@ -26,7 +26,7 @@ public readonly struct MarkupNode
             return Children.First(x => x.MarkupTag.Tag == tag);
         }
     }
-    
+
     public MarkupNode? this[MarkupTagName tag, int at]
     {
         get
@@ -41,7 +41,7 @@ public readonly struct MarkupNode
             }
         }
     }
-    
+
     public static MarkupNode Create(params MarkupNode[] children)
     {
         return new MarkupNode
@@ -49,7 +49,7 @@ public readonly struct MarkupNode
             Children = children.ToList()
         };
     }
-    
+
     public static MarkupNode Create(MarkupTagName tag, params MarkupNode[] children)
     {
         return new MarkupNode
@@ -58,7 +58,7 @@ public readonly struct MarkupNode
             Children = children.ToList()
         };
     }
-    
+
     public static MarkupNode Create(MarkupTagName tag, string stringContent)
     {
         return new MarkupNode
@@ -75,7 +75,7 @@ public readonly struct MarkupNode
             MarkupTag = tag
         };
     }
-    
+
     public static MarkupNode Create(params StylesheetNode[] stylesheetNodes)
     {
         return new MarkupNode
@@ -84,64 +84,39 @@ public readonly struct MarkupNode
             StringContent = string.Join(string.Empty, stylesheetNodes)
         };
     }
-    public MarkupNode WithAttributes(params MarkupAttribute[] attrs) => 
-        this with { Attributes = [ ..Attributes, ..attrs ] };
+
+    public MarkupNode WithAttributes(params MarkupAttribute[] attrs) =>
+        this with { Attributes = [..Attributes, ..attrs] };
 
     public MarkupNode WithClasses(params MarkupClass[] classes) =>
         this with { Classes = classes };
 
-    public MarkupNode WithHyperscript(HyperscriptAttribute hs) =>
-        this with { Attributes = [ ..Attributes, hs ] }; 
-    
+    public MarkupNode WithTailwind(params TailwindUtilityClass[] tw) =>
+        this with { Classes = [..Classes, ..tw] };
+
     public MarkupNode WithStyles(params MarkupStyle[] styleAttrs) =>
-        this with { Styles = [ ..Styles, ..styleAttrs ] };
-    
-    private string BuildMarkup()
+        this with { Styles = [..Styles, ..styleAttrs] };
+
+    private string BuildMarkup() => this switch
     {
-        if (IsJustContent)
-            return StringContent;
+        { IsJustContent: true } => StringContent,
+        { IsComment: true } => $"<!-- {StringContent} -->",
+        { IsFragment: true } => string.Join(string.Empty, Children),
+        { IsSelfClosing: true } => $"<{MarkupTag} {SerializeTagProperties()} />",
+        { IsVoid: true } => $"<{MarkupTag} {SerializeTagProperties()}>",
+        _ =>
+            $"<{MarkupTag}{SerializeTagProperties()}>" +
+                $"{string.Join(string.Empty, Children)}" + 
+                $"{StringContent}" +
+            $"</{MarkupTag}>"
+    };
 
-        if (IsComment)
-            return $"<!-- {StringContent} -->";
-        
-        if (IsFragment)
-            return string.Join(string.Empty, Children);
-        
-        var markupString = $"<{MarkupTag}";
-
-        if (Attributes.Length > 0)
-            markupString += Attributes.Serialize();
-        
-        if (Styles.Length > 0)
-            markupString += Styles.Serialize();
-        
-        if (Classes.Length > 0)
-            markupString += Classes.Serialize();
-
-        if (IsSelfClosing)
-            return $"{markupString} />";
-
-        if (IsVoid)
-            return $"{markupString}>";
-        
-        markupString += ">";
-
-        if (Children.Count > 0)
-            markupString += string.Join(string.Empty, Children);
-
-        markupString += $"{StringContent}";
-        
-        markupString += $"</{MarkupTag}>";
-        
-        return markupString;
-    }
-
+    private string SerializeTagProperties() =>
+        $"{(Attributes.Length > 0 ? Attributes.Serialize() : string.Empty)}{(Styles.Length > 0 ? Styles.Serialize() : string.Empty)}{(Classes.Length > 0 ? Classes.Serialize() : string.Empty)}";
+    
     public override string ToString() => BuildMarkup();
     
-    public static implicit operator string(MarkupNode m)
-    {
-        return m.ToString();
-    }
+    public static implicit operator string(MarkupNode m) => m.ToString();
 
     public static implicit operator MarkupNode(DateTime input)
     {
