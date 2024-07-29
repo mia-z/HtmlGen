@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Split docs branch from all main branch refs
+quartz
+
 # dotenv files
 .env
 
