@@ -3,7 +3,7 @@ using HtmlGen.Core.Structs;
 
 namespace HtmlGen.Core.Abstractions;
 
-public abstract class MainLayout : LayoutBase, IMainLayout
+public class MainLayoutBase : LayoutBase, IMainLayout
 {
     public bool UseTailwind { get; set; } = false;
     public bool UseHyperscript { get; set; } = false;
@@ -17,7 +17,7 @@ public abstract class MainLayout : LayoutBase, IMainLayout
             html(
                 head(
                     title(PageTitle),
-                    RenderMetaTags(),
+                    RenderHeadTags(),
                     NormalizeBaseCss ? style(NormalizedStylesheet) : "",
                     UseHyperscript ? script(string.Empty, "https://unpkg.com/hyperscript.org@0.9.12") : "",
                     UseTailwind ? script(string.Empty, "https://cdn.tailwindcss.com") : ""
@@ -58,12 +58,14 @@ public abstract class MainLayout : LayoutBase, IMainLayout
         return root;
     }
 
-    protected virtual MarkupNode RenderMetaTags() =>
+    protected virtual MarkupNode RenderHeadTags() =>
         Fragment(
             meta("charset", "UTF-8"),
             meta("viewport", "width=device-width, initial-scale=1.0")
         );
-    
+
+    protected override async Task<MarkupNode> RenderLayout() => await RenderPageContent();
+
     public override async Task<MarkupNode> RenderPageContent()
     {
         return Fragment(

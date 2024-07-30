@@ -4,5 +4,5 @@ namespace HtmlGen.Core.Interfaces;
 
 public interface IAsyncRenderable
 {
-    internal Task<MarkupNode> RenderAsync();
+    protected internal Task<MarkupNode> RenderAsync();
 }

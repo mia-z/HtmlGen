@@ -12,7 +12,7 @@ public abstract class LayoutBase : PageBuilder, ILayout
         return await RenderLayout();
     }
     
-    public abstract Task<MarkupNode> RenderLayout();
+    protected abstract Task<MarkupNode> RenderLayout();
 
     public virtual async Task<MarkupNode> RenderPageContent()
     {

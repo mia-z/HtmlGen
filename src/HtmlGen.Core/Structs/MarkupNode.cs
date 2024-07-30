@@ -118,6 +118,11 @@ public readonly struct MarkupNode
     
     public static implicit operator string(MarkupNode m) => m.ToString();
 
+    public static implicit operator MarkupNode(MarkupNode[] nodes)
+    {
+        return Create(nodes);
+    }
+    
     public static implicit operator MarkupNode(DateTime input)
     {
         return new MarkupNode

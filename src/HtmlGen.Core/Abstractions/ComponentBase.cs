@@ -3,7 +3,7 @@ using HtmlGen.Core.Structs;
 
 namespace HtmlGen.Core.Abstractions;
 
-public abstract class ComponentBase : MarkupBuilder, IComponent
+public abstract class ComponentBase : MarkupBuilderBase, IComponent
 {
     public abstract MarkupNode RenderComponent();
 

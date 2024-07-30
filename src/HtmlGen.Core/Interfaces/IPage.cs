@@ -9,7 +9,7 @@ public interface IPage : IRoutable, IAsyncRenderable
     internal Type? LayoutType { get; init; }
     internal ILayout? Layout { get; set; }
     internal bool HasLayout { get; }
-    internal Task<MarkupNode> RenderContent();
+    public Task<MarkupNode> RenderContent();
     Stylesheet? ScopedStylesheet { get; init; }
     string Title { get; set; }
 }

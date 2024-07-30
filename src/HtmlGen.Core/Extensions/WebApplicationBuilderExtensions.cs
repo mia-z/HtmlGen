@@ -1,9 +1,7 @@
 using System.Collections.Immutable;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using HtmlGen.Core.Abstractions;
 using HtmlGen.Core.Attributes;
-using HtmlGen.Core.DefaultLayouts;
 using HtmlGen.Core.DefaultPages;
 using HtmlGen.Core.Interfaces;
 using HtmlGen.Core.Models;
@@ -18,7 +16,7 @@ public static class WebApplicationBuilderExtensions
 {
     private static ImmutableList<Type> assemblyTypes { get; set; }
     
-    public static WebApplicationBuilder RegisterHtmlGen(this WebApplicationBuilder builder, HtmlGenConfiguration? config = null)
+    public static WebApplicationBuilder AddHtmlGen(this WebApplicationBuilder builder, HtmlGenConfiguration? config = null)
     {
         config = config is null
             ? new HtmlGenConfiguration
@@ -35,7 +33,6 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<IComponentResolver, ComponentResolver>();
         builder.Services.AddSingleton<IRouteResolver, RouteResolver>();
         builder.Services.AddSingleton<IPageResolver, PageResolver>();
-        builder.Services.AddSingleton<IRouteResolver, RouteResolver>();
         builder.Services.AddSingleton<ILayoutResolver, LayoutResolver>();
         
         assemblyTypes = config.AssembliesToSearch
@@ -54,14 +51,14 @@ public static class WebApplicationBuilderExtensions
     private static WebApplicationBuilder RegisterMainLayout(this WebApplicationBuilder builder)
     {
         var mainLayout = assemblyTypes
-            .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(MainLayout)) && x != typeof(DefaultMainLayout))
+            .Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(MainLayoutBase)))
             .ToImmutableArray();
 
         if (mainLayout.Length > 1)
             throw new InvalidOperationException("Can only have one MainLayout");
 
         builder.Services.Add(mainLayout.Length == 0
-            ? new ServiceDescriptor(typeof(IMainLayout), typeof(DefaultMainLayout), ServiceLifetime.Singleton)
+            ? new ServiceDescriptor(typeof(IMainLayout), typeof(MainLayoutBase), ServiceLifetime.Singleton)
             : new ServiceDescriptor(typeof(IMainLayout), mainLayout.First(), ServiceLifetime.Singleton));
         
         return builder;
