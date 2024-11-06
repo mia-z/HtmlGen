@@ -12,9 +12,6 @@ Use this for testing or inspiration, not in a production environment!
 
 ---
 
-<h3 align="center"> Full docs can <a href="https://htmlgen.miaz.dev">be found here</a></h3>
-
----
 
 ### Prerequisites
 
@@ -39,7 +36,6 @@ Pages will be the bread and butter of your site. To be functional, page must do 
 
 - Use the Class Attribute `[Route(string)]`
 - Inherit from Abstract Class `Page`
-- Implement the abstract method `RenderContent()`
 
 From there, your page will be reachable at the value provided in the Route Attribute.
 
