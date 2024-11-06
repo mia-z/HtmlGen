@@ -186,7 +186,3 @@ public class BodyLayout : Layout
         ).WithClasses("w-full h-screen flex flex-col bg-slate-900/80");
 }
 ```
-
----
-
-Those are all the basic building blocks of HTML Gen to get started, more features can be <a href="https://htmlgen.miaz.dev">found in the docs</a> 
